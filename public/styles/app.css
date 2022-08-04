@@ -16,9 +16,11 @@
 }
 
 body {
-	background-color: rgb(248, 249, 250);
+	background-color: rgb(38, 43, 48);
 	overflow: hidden;
 	font: normal 24px 'FlappyBird';
+	width: 100vw;
+	height: 100vh;
 }
 
 a,
@@ -36,4 +38,13 @@ textarea {
 
 img {
 	pointer-events: none;
+}
+
+.container {
+	max-width: 100%;
+	max-height: 100%;
+	width: 480px;
+	height: 640px;
+	overflow: hidden;
+	margin: 0 auto;
 }

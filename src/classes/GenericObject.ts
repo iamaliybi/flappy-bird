@@ -3,7 +3,8 @@ type GenericObjectConstructor = {
 	height: number;
 	image: CanvasImageSource;
 	ctx: CanvasRenderingContext2D;
-	position: { x: number, y: number };
+	x: number;
+	y: number;
 };
 
 class GenericObject {
@@ -13,8 +14,8 @@ class GenericObject {
 	ctx: CanvasRenderingContext2D;
 	position: { x: number, y: number };
 
-	constructor({ ctx, image, width, height, position }: GenericObjectConstructor) {
-		this.position = position;
+	constructor({ ctx, image, width, height, x, y }: GenericObjectConstructor) {
+		this.position = { x, y };
 		this.height = height;
 		this.width = width;
 		this.image = image;

@@ -3,7 +3,8 @@ type PlatformObjectConstructor = {
 	height: number;
 	image: CanvasImageSource;
 	ctx: CanvasRenderingContext2D;
-	position: { x: number, y: number };
+	x: number;
+	y: number;
 };
 
 class Platform {
@@ -13,8 +14,8 @@ class Platform {
 	ctx: CanvasRenderingContext2D;
 	position: { x: number, y: number };
 
-	constructor({ ctx, image, width, height, position }: PlatformObjectConstructor) {
-		this.position = position;
+	constructor({ ctx, image, width, height, x, y }: PlatformObjectConstructor) {
+		this.position = { x, y };
 		this.height = height;
 		this.width = width;
 		this.image = image;
