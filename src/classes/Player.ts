@@ -1,3 +1,4 @@
+import { createImage } from './../helper';
 type PlayerObjectConstructor = {
 	screenX: number;
 	screenY: number;
@@ -5,12 +6,12 @@ type PlayerObjectConstructor = {
 	ctx: CanvasRenderingContext2D;
 };
 
-interface Sprites {
-	[key: string]: {
-		image: CanvasImageSource;
-		cropWidth: number;
-		imageWidth: number;
-	}
+type BirdState = 'upward' | 'downward' | 'forward';
+
+
+type Sprites = {
+	x: number;
+	x1: number;
 };
 
 class Player {
@@ -20,13 +21,14 @@ class Player {
 	screenX: number;
 	screenY: number;
 	speed: number;
-	frames: number;
-	sprites: number;
+	velocity: number;
+	stillness: boolean;
+	lose: boolean;
+	frames: 0 | 1 | 2;
 	image: CanvasImageSource;
 	ctx: CanvasRenderingContext2D;
 	position: { x: number, y: number };
-	velocity: { x: number, y: number };
-	// sprites: Sprites;
+	sprite: Sprites;
 	state: 'upward' | 'downward' | 'forward';
 
 	constructor({ ctx, screenX, screenY, g }: PlayerObjectConstructor) {
@@ -34,14 +36,57 @@ class Player {
 		this.gravity = g;
 		this.screenX = screenX;
 		this.screenY = screenY;
-		this.position = { x: 100, y: 100 };
-		this.velocity = { x: 0, y: 0 };
-		this.speed = 10;
-		this.width = 66;
-		this.height = 150;
-		this.frames = 0;
-		// this.sprites = {};
-		this.state = 'forward';
+		this.speed = 2;
+		this.width = 61;
+		this.height = 42;
+		this.frames = 1; // 0: downward, 1: forward, 2: upward
+		this.stillness = true;
+		this.lose = false;
+		this.velocity = 0;
+		this.image = createImage('http://localhost/Github/flappy-bird/public/images/bird.png');
+		this.position = { x: (this.screenX / 2) - this.width, y: (this.screenY / 2) - this.height };
+		this.sprite = {
+			x: 92,
+			x1: 61
+		};
+	}
+
+	draw() {
+		this.ctx.drawImage(
+			this.image,
+			this.sprite.x * this.frames, // sx
+			0, // sy
+			this.sprite.x, // sWidth
+			64, // sHeight
+			this.position.x, // dx
+			this.position.y, // dy
+			this.sprite.x1, // dWidth
+			this.height // dHeight
+		);
+	}
+
+	update() {
+		if (this.lose) return this.draw();
+
+		if (this.stillness) {
+			const centerPoint = (this.screenY / 2) - this.height;
+			if (this.position.y < centerPoint - 10) this.gravity += 0.01;
+			else this.gravity -= 0.01;
+
+			this.position.y += this.gravity;
+
+			return this.draw();
+		}
+
+		this.position.y += this.velocity;
+		this.velocity += this.gravity;
+
+		this.draw();
+	}
+
+	nextFrame() {
+		if (this.frames + 1 > 2) this.frames = 0;
+		else this.frames++;
 	}
 };
 

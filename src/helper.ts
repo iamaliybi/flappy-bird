@@ -4,3 +4,7 @@ export const createImage = (url: string): CanvasImageSource => {
 
 	return img;
 }
+
+export const isBetween = (min: number, value: number, max:number): boolean => {
+	return value >= min && value <= max;
+};

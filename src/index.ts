@@ -1,9 +1,18 @@
 import Player from "./classes/Player";
 import Platform from "./classes/Platform";
 import GenericObject from "./classes/GenericObject";
-import { createImage } from './helper';
+import { createImage, isBetween } from './helper';
 
 /* Variables */
+let JUMP_KEY_PRESSED = false;
+
+const SIZES = {
+	GROUND: {
+		WIDTH: Math.floor(37 * 2 / 3),
+		HEIGHT: Math.floor(128 * 2 / 3)
+	}
+}
+
 let animation: number,
 	width: number,
 	height: number,
@@ -11,58 +20,111 @@ let animation: number,
 	platforms: Platform[],
 	genericObjects: GenericObject[],
 	scrollOffset: number = 0,
-	gravity: number = 0,
-	stillness = true;
+	gravity: number = 0.23,
+	stillness: boolean = false,
+	timeout: null | NodeJS.Timeout = null;
+
+const IMAGES = {
+	ground: 'http://localhost/Github/flappy-bird/public/images/ground.png',
+	background: 'http://localhost/Github/flappy-bird/public/images/background.png'
+}
 
 const canvas = document.getElementById('flappyBird') as HTMLCanvasElement;
 const ctx = canvas.getContext('2d');
 
 /* Code */
-const loadBird = () => {
-	//
+const addNewPlatform = () => {
+	const platformImage = createImage(IMAGES.ground);
+
+	const platform = new Platform({
+		ctx,
+		image: platformImage,
+		width: SIZES.GROUND.WIDTH,
+		height: SIZES.GROUND.HEIGHT,
+		x: (platforms[platforms.length - 1].position.x + SIZES.GROUND.WIDTH),
+		y: height - SIZES.GROUND.HEIGHT
+	});
+
+	platforms.splice(0, 1);
+	platforms.push(platform);
+}
+
+const loadPlayer = () => {
+	player = new Player({ ctx, screenX: width, screenY: height, g: 0 });
+	player.draw();
 };
 
 const loadPlatforms = () => {
-	const platformImage = createImage('http://localhost/Github/flappy-bird/public/images/ground.png');
+	const platformImage = createImage(IMAGES.ground);
 
 	platforms = [];
-	for (let i = 0; i < 15; i++) {
-		const platform = new Platform({ ctx, image: platformImage, width: 37, height: 128, x: (i * 37) + 1, y: height - 128 });
+	const groundCount = Math.floor(width / SIZES.GROUND.WIDTH) + 10;
+	for (let i = 0; i < groundCount; i++) {
+		const platform = new Platform({
+			ctx,
+			image: platformImage,
+			width: SIZES.GROUND.WIDTH,
+			height: SIZES.GROUND.HEIGHT,
+			x: (i * SIZES.GROUND.WIDTH),
+			y: height - SIZES.GROUND.HEIGHT
+		});
 
 		platforms.push(platform);
 	}
 };
 
 const loadGenericObjects = () => {
-	const bgImage = createImage('http://localhost/Github/flappy-bird/public/images/background.png');
+	const bgImage = createImage(IMAGES.background);
 
 	genericObjects = [
-		new GenericObject({ ctx, image: bgImage, width, height: height - 128, x: -1, y: -1 }),
+		new GenericObject({
+			ctx,
+			image: bgImage,
+			width,
+			height: height - SIZES.GROUND.HEIGHT,
+			x: -1,
+			y: -1
+		}),
 	];
 };
 
 const animate = () => {
-	/* increase platform.x position with player position.x */
+	animation = requestAnimationFrame(animate);
+	ctx.clearRect(0, 0, width, height);
+
+	loadObjects();
+
+	if (!stillness) {
+		if (scrollOffset > 200 && scrollOffset % SIZES.GROUND.WIDTH === 0) addNewPlatform();
+		platforms.forEach(platform => platform.position.x -= player.speed);
+
+		if (scrollOffset % 25 === 0) player.nextFrame();
+	}
+
+	if (player.position.y >= height - SIZES.GROUND.HEIGHT - player.height) {
+		player.lose = true;
+		stillness = true;
+	}
+
+	scrollOffset += player.speed;
+	player.update();
 };
 
-const initialLoad = () => {
+const loadObjects = () => {
 	genericObjects.forEach(obj => obj.draw());
-
 	platforms.forEach(obj => obj.draw());
 };
 
 const start = () => {
 	if (animation) cancelAnimationFrame(animation);
-
-	// if (player) player.reset();
-	// else player = player ? player : new Player({ ctx, w: width, h: height, g: gravity });
-	// player = player ? player : new Player({ ctx, w: width, h: height, g: gravity });
-	loadGenericObjects();
-	loadPlatforms();
-	// player.update();
 	scrollOffset = 0;
 
-	initialLoad();
+	/* Load playground */
+	loadGenericObjects();
+	loadPlatforms();
+	loadObjects();
+	loadPlayer();
+
 	animate();
 };
 
@@ -75,6 +137,19 @@ const init = () => {
 
 	start();
 };
+
+document.addEventListener('keydown', ({ keyCode }) => {
+	if (![32, 32].includes(keyCode) || player.lose) return;
+
+	/* When user stillness */
+	if (player.stillness) {
+		player.stillness = false;
+		player.gravity = gravity;
+	}
+
+	/* When user pressed space */
+	player.velocity -= 7;
+});
 
 /* When dom content loaded */
 document.addEventListener('DOMContentLoaded', init);
