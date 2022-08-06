@@ -2,6 +2,7 @@ import Player from "./classes/Player";
 import Platform from "./classes/Platform";
 import GenericObject from "./classes/GenericObject";
 import { createImage, isBetween } from './helper';
+import Pipe from "./classes/Pipe";
 
 /* Variables */
 let JUMP_KEY_PRESSED = false;
@@ -20,9 +21,10 @@ let animation: number,
 	platforms: Platform[],
 	genericObjects: GenericObject[],
 	scrollOffset: number = 0,
+	reached: number = 0,
 	gravity: number = 0.23,
 	stillness: boolean = false,
-	timeout: null | NodeJS.Timeout = null;
+	pipes: Pipe[];
 
 const IMAGES = {
 	ground: 'http://localhost/Github/flappy-bird/public/images/ground.png',
@@ -49,15 +51,21 @@ const addNewPlatform = () => {
 	platforms.push(platform);
 }
 
+const addPipe = () => {
+	const pipeHeight = 100;
+	const pipe = new Pipe({ ctx, height: pipeHeight, position: { x: scrollOffset + 200, y: height - SIZES.GROUND.HEIGHT - pipeHeight } });
+
+	pipes.push(pipe);
+}
+
 const loadPlayer = () => {
 	player = new Player({ ctx, screenX: width, screenY: height, g: 0 });
 	player.draw();
 };
 
-const loadPlatforms = () => {
+const addPlatforms = () => {
 	const platformImage = createImage(IMAGES.ground);
 
-	platforms = [];
 	const groundCount = Math.floor(width / SIZES.GROUND.WIDTH) + 10;
 	for (let i = 0; i < groundCount; i++) {
 		const platform = new Platform({
@@ -73,46 +81,63 @@ const loadPlatforms = () => {
 	}
 };
 
-const loadGenericObjects = () => {
+const addGenericObjects = () => {
 	const bgImage = createImage(IMAGES.background);
 
-	genericObjects = [
-		new GenericObject({
-			ctx,
-			image: bgImage,
-			width,
-			height: height - SIZES.GROUND.HEIGHT,
-			x: -1,
-			y: -1
-		}),
-	];
+	genericObjects.push(new GenericObject({
+		ctx,
+		image: bgImage,
+		width,
+		height: height - SIZES.GROUND.HEIGHT,
+		x: -1,
+		y: -1
+	}));
+};
+
+const loadCommonObjects = () => {
+	genericObjects.forEach(obj => obj.draw());
+
+	platforms.forEach(platform => platform.draw());
+};
+
+const loadPlaygroundObjects = () => {
+	pipes.forEach(pipe => pipe.draw());
+};
+
+const reset = () => {
+	pipes = [];
+	platforms = [];
+	genericObjects = [];
 };
 
 const animate = () => {
 	animation = requestAnimationFrame(animate);
 	ctx.clearRect(0, 0, width, height);
 
-	loadObjects();
-
 	if (!stillness) {
 		if (scrollOffset > 200 && scrollOffset % SIZES.GROUND.WIDTH === 0) addNewPlatform();
+		if (scrollOffset % 25 === 0) player.nextFrame();
+
+		if (reached > 200 && scrollOffset % 200 === 0) addPipe();
+
 		platforms.forEach(platform => platform.position.x -= player.speed);
 
-		if (scrollOffset % 25 === 0) player.nextFrame();
+		pipes.forEach(pipe => pipe.position.x -= player.speed);
 	}
+	
+	loadCommonObjects();
+
+
+	if (!player.stillness) loadPlaygroundObjects();
 
 	if (player.position.y >= height - SIZES.GROUND.HEIGHT - player.height) {
 		player.lose = true;
 		stillness = true;
 	}
 
+	if (!player.stillness && !stillness) reached += player.speed;
 	scrollOffset += player.speed;
 	player.update();
-};
-
-const loadObjects = () => {
-	genericObjects.forEach(obj => obj.draw());
-	platforms.forEach(obj => obj.draw());
 };
 
 const start = () => {
@@ -120,9 +145,14 @@ const start = () => {
 	scrollOffset = 0;
 
 	/* Load playground */
-	loadGenericObjects();
-	loadPlatforms();
-	loadObjects();
+	reset();
+
+	/* Add */
+	addGenericObjects();
+	addPlatforms();
+
+	/* Load */
+	loadCommonObjects();
 	loadPlayer();
 
 	animate();
@@ -138,9 +168,7 @@ const init = () => {
 	start();
 };
 
-document.addEventListener('keydown', ({ keyCode }) => {
-	if (![32, 32].includes(keyCode) || player.lose) return;
-
+const whenPlayerJump = () => {
 	/* When user stillness */
 	if (player.stillness) {
 		player.stillness = false;
@@ -148,7 +176,27 @@ document.addEventListener('keydown', ({ keyCode }) => {
 	}
 
 	/* When user pressed space */
-	player.velocity -= 7;
+	player.velocity = -7;
+
+	JUMP_KEY_PRESSED = true;
+};
+
+document.addEventListener('mousedown', whenPlayerJump);
+
+document.addEventListener('keypress', ({ keyCode }) => {
+	if (![32, 38].includes(keyCode) || player.lose || JUMP_KEY_PRESSED) return;
+
+	whenPlayerJump();
+});
+
+document.addEventListener('keyup', ({ keyCode }) => {
+	if (![32, 38].includes(keyCode)) return;
+
+	JUMP_KEY_PRESSED = false;
+});
+
+document.addEventListener('mouseup', () => {
+	JUMP_KEY_PRESSED = false;
 });
 
 /* When dom content loaded */
