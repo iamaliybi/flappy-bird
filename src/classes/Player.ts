@@ -3,6 +3,7 @@ type PlayerObjectConstructor = {
 	screenX: number;
 	screenY: number;
 	g: number;
+	speed: number;
 	ctx: CanvasRenderingContext2D;
 };
 
@@ -20,8 +21,8 @@ class Player {
 	gravity: number;
 	screenX: number;
 	screenY: number;
-	speed: number;
 	velocity: number;
+	speed: number;
 	stillness: boolean;
 	lose: boolean;
 	frames: 0 | 1 | 2;
@@ -31,18 +32,18 @@ class Player {
 	sprite: Sprites;
 	state: 'upward' | 'downward' | 'forward';
 
-	constructor({ ctx, screenX, screenY, g }: PlayerObjectConstructor) {
+	constructor({ ctx, screenX, screenY, speed, g }: PlayerObjectConstructor) {
 		this.ctx = ctx;
 		this.gravity = g;
 		this.screenX = screenX;
 		this.screenY = screenY;
-		this.speed = 2;
 		this.width = 61;
 		this.height = 42;
 		this.frames = 1; // 0: downward, 1: forward, 2: upward
 		this.stillness = true;
 		this.lose = false;
 		this.velocity = 0;
+		this.speed = speed;
 		this.image = createImage('http://localhost/Github/flappy-bird/public/images/bird.png');
 		this.position = { x: (this.screenX / 2) - this.width, y: (this.screenY / 2) - this.height };
 		this.sprite = {

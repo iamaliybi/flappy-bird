@@ -66,3 +66,16 @@
 	border-right: 1px solid rgba(0, 0, 0, .2);
 	border-left: 1px solid rgba(255, 255, 255, .1);
 }
+
+.flappy-bird {
+	position: relative;
+}
+
+.flappy-bird .score {
+	position: absolute;
+	font: normal 16px 'FlappyBird';
+	color: rgb(255, 255, 255);
+	left: 50%;
+	top: 10%;
+	
+}

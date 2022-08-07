@@ -3,8 +3,12 @@ export const createImage = (url: string): CanvasImageSource => {
 	img.src = url;
 
 	return img;
-}
-
-export const isBetween = (min: number, value: number, max:number): boolean => {
-	return value >= min && value <= max;
 };
+
+export const getRndInteger = (min: number, max: number) => {
+	return Math.floor(Math.random() * (max - min)) + min;
+};
+
+export const encodeScore = (n: number): string => n.toString(32);
+
+export const decodeScore = (n: string): number => parseInt(n, 32);

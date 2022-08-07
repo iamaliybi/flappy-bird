@@ -1,23 +1,25 @@
 import { createImage } from "../helper";
 
 type PipeObjectConstructor = {
-	height: number;
 	ctx: CanvasRenderingContext2D;
 	position: { x: number, y: number };
+	state: 'top' | 'bottom'
 };
 
 class Pipe {
 	width: number;
 	height: number;
+	state: 'top' | 'bottom';
 	image: CanvasImageSource;
 	ctx: CanvasRenderingContext2D;
 	position: { x: number, y: number };
 
-	constructor({ ctx, height, position }: PipeObjectConstructor) {
+	constructor({ ctx, position, state }: PipeObjectConstructor) {
 		this.position = position;
-		this.height = height;
+		this.height = 528;
 		this.width = 92;
-		this.image = createImage('http://localhost/Github/flappy-bird/public/images/pipe.png');
+		this.state = state;
+		this.image = createImage(`http://localhost/Github/flappy-bird/public/images/pipe-${this.state}.png`);
 		this.ctx = ctx;
 	}
 
