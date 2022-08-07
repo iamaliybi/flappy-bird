@@ -13,10 +13,10 @@ const SCORE = {
 };
 
 const CONFIG = {
-	PLAYER_VELOCITY_WHILE_JUMP: -7,
-	PLAYER_SPEED: 3,
-	FRAME_CHANGE: 25,
-	GRAVITY: 0.35
+	PLAYER_VELOCITY_WHILE_JUMP: -10,
+	PLAYER_SPEED: 6,
+	FRAME_CHANGE: 20,
+	GRAVITY: 1.25
 };
 
 const SIZES = {
@@ -119,6 +119,9 @@ const loadPlaygroundObjects = () => {
 };
 
 const reset = () => {
+	if (player) player.lose = false;
+	stillness = false;
+
 	pipes = [];
 	platforms = [];
 	genericObjects = [];
@@ -172,7 +175,7 @@ const changePlayerFrame = () => {
 };
 
 const balancePlatforms = () => {
-	if (scrollOffset > 200 && scrollOffset % SIZES.GROUND.WIDTH === 0) {
+	if (scrollOffset > SIZES.GROUND.WIDTH && scrollOffset % SIZES.GROUND.WIDTH === 0) {
 		addNewPlatform();
 		platforms.splice(0, 1);
 	}
@@ -220,14 +223,10 @@ const restart = () => {
 	window.removeEventListener('click', restart);
 	document.body.style.cursor = 'default';
 
-	player.lose = false;
-	stillness = false;
-
 	start();
 };
 
 const start = () => {
-	if (animation) cancelAnimationFrame(animation);
 	scrollOffset = 0;
 	SCORE.CURRENT = 0;
 
@@ -246,7 +245,9 @@ const start = () => {
 	loadPlayer();
 	updateCurrentScore();
 
-	animate();
+	if (animation) cancelAnimation();
+
+	setTimeout(animate, 25);
 };
 
 const logMyName = () => {
