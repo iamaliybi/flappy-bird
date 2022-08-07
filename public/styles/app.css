@@ -1,8 +1,29 @@
 @font-face {
 	font-family: 'FlappyBird';
-	src: url("/fonts/flappy-bird.eot");
-	src: url("/fonts/flappy-bird.eot?#iefix") format("embedded-opentype"), url("/fonts/flappy-bird.woff") format("woff"), url("/fonts/flappy-bird.ttf") format("truetype"), url("/fonts/flappy-bird.svg#04b_19regular") format("svg");
+	src: url("/fonts/fb/flappy-bird.eot");
+	src: url("/fonts/fb/flappy-bird.eot?#iefix") format("embedded-opentype"), url("/fonts/fb/flappy-bird.woff") format("woff"), url("/fonts/fb/flappy-bird.ttf") format("truetype"), url("/fonts/fb/flappy-bird.svg#04b_19regular") format("svg");
 	font-weight: normal;
+	font-style: normal
+}
+
+@font-face {
+	font-family: 'Helvetica';
+	src: url("/fonts/helvetica/helvetica-light-587ebe5a59211.ttf");
+	font-weight: 300;
+	font-style: normal
+}
+
+@font-face {
+	font-family: 'Helvetica';
+	src: url("/fonts/helvetica/helvetica-light-587ebe5a59211.ttf");
+	font-weight: normal;
+	font-style: normal
+}
+
+@font-face {
+	font-family: 'Helvetica';
+	src: url("/fonts/helvetica/helvetica-compressed-5871d14b6903a.otf");
+	font-weight: 500;
 	font-style: normal
 }
 
@@ -18,7 +39,7 @@
 body {
 	background-color: rgb(38, 43, 48);
 	overflow: hidden;
-	font: normal 24px 'FlappyBird';
+	font: normal 24px Helvetica,Arial,sans-serif;
 	width: 100vw;
 	height: 100vh;
 }
@@ -38,13 +59,4 @@ textarea {
 
 img {
 	pointer-events: none;
-}
-
-.container {
-	max-width: 100%;
-	max-height: 100%;
-	width: 480px;
-	height: 640px;
-	overflow: hidden;
-	margin: 0 auto;
 }

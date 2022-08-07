@@ -181,21 +181,21 @@ const whenPlayerJump = () => {
 	JUMP_KEY_PRESSED = true;
 };
 
-document.addEventListener('mousedown', whenPlayerJump);
+canvas.addEventListener('mousedown', whenPlayerJump);
 
-document.addEventListener('keypress', ({ keyCode }) => {
+canvas.addEventListener('keypress', ({ keyCode }) => {
 	if (![32, 38].includes(keyCode) || player.lose || JUMP_KEY_PRESSED) return;
 
 	whenPlayerJump();
 });
 
-document.addEventListener('keyup', ({ keyCode }) => {
+canvas.addEventListener('keyup', ({ keyCode }) => {
 	if (![32, 38].includes(keyCode)) return;
 
 	JUMP_KEY_PRESSED = false;
 });
 
-document.addEventListener('mouseup', () => {
+canvas.addEventListener('mouseup', () => {
 	JUMP_KEY_PRESSED = false;
 });
 
