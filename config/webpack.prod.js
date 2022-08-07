@@ -25,8 +25,14 @@ module.exports = merge(common, {
 		}),
 		new CopyWebpackPlugin({
 			patterns: [
-				{ from: "public/assets", to: "assets" },
+				{ from: "public/fonts", to: "fonts" },
 			],
+			patterns: [
+				{ from: "public/images", to: "images" },
+			],
+			patterns: [
+				{ from: "public/styles", to: "styles" },
+			]
 		})
 	],
 });

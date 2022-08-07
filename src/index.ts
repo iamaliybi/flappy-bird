@@ -41,10 +41,11 @@ let animation: number,
 	stillness: boolean = false,
 	pipes: Pipe[];
 
+const BASE_URL = 'https://flappy-bird-ay.netfly.app';
 const IMAGES = {
-	ground: 'http://localhost/Github/flappy-bird/public/images/ground.png',
-	background: 'http://localhost/Github/flappy-bird/public/images/background.png',
-	restart: 'http://localhost/Github/flappy-bird/public/images/restart.png'
+	ground: BASE_URL + '/images/ground.png',
+	background: BASE_URL + '/images/background.png',
+	restart: BASE_URL + '/images/restart.png'
 };
 
 const canvas = document.getElementById('flappyBird') as HTMLCanvasElement;
