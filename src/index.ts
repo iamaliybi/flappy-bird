@@ -41,7 +41,7 @@ let animation: number,
 	stillness: boolean = false,
 	pipes: Pipe[];
 
-const BASE_URL = 'https://flappy-bird-ay.netfly.app';
+const BASE_URL = 'https://flappy-bird-ay.netlify.app';
 const IMAGES = {
 	ground: BASE_URL + '/images/ground.png',
 	background: BASE_URL + '/images/background.png',
