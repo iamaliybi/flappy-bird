@@ -43,9 +43,9 @@ let animation: number,
 
 const BASE_URL = 'https://flappy-bird-ay.netlify.app';
 const IMAGES = {
-	ground: BASE_URL + '/images/ground.png',
-	background: BASE_URL + '/images/background.png',
-	restart: BASE_URL + '/images/restart.png'
+	ground: BASE_URL + '/assets/images/ground.png',
+	background: BASE_URL + '/assets/images/background.png',
+	restart: BASE_URL + '/assets/images/restart.png'
 };
 
 const canvas = document.getElementById('flappyBird') as HTMLCanvasElement;

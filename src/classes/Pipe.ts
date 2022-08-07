@@ -19,7 +19,7 @@ class Pipe {
 		this.height = 528;
 		this.width = 92;
 		this.state = state;
-		this.image = createImage(`http://localhost/Github/flappy-bird/public/images/pipe-${this.state}.png`);
+		this.image = createImage(`https://flappy-bird-ay.netlify.app/assets/images/pipe-${this.state}.png`);
 		this.ctx = ctx;
 	}
 

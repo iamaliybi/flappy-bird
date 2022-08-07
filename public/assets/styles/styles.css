@@ -26,7 +26,7 @@
 #header nav .logo>h1 {
 	margin: 0;
 	text-indent: -10000px;
-	background: url('/images/logo.png') center no-repeat;
+	background: url('/assets/images/logo.png') center no-repeat;
 	width: 120px;
 	display: block;
 }
