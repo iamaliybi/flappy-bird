@@ -13,10 +13,10 @@ const SCORE = {
 };
 
 const CONFIG = {
-	PLAYER_VELOCITY_WHILE_JUMP: -10,
-	PLAYER_SPEED: 6,
-	FRAME_CHANGE: 20,
-	GRAVITY: 1.25
+	PLAYER_VELOCITY_WHILE_JUMP: -8,
+	PLAYER_SPEED: 4,
+	FRAME_CHANGE: 25,
+	GRAVITY: 0.4
 };
 
 const SIZES = {
@@ -192,7 +192,14 @@ const movingObjects = () => {
 	pipes.forEach(pipe => pipe.position.x -= player.speed);
 };
 
+let LAST_TIME = (new Date()).getTime();
 const animate = () => {
+	// Calculate
+	const c = (new Date()).getTime();
+	console.log(Math.abs(c - LAST_TIME)); // 6_7
+
+	LAST_TIME = c;
+	// Code
 	animation = requestAnimationFrame(animate);
 	ctx.clearRect(0, 0, width, height);
 
@@ -204,17 +211,18 @@ const animate = () => {
 		movingObjects();
 	}
 
+	if (!player.stillness) loadPlaygroundObjects();
+
+	player.update();
+
 	if (!player.stillness) {
 		balancePipes();
-		loadPlaygroundObjects();
 		whenPlayerDamaged();
 	}
 
 	platforms.forEach(platform => platform.draw());
 
 	if (player.height + player.position.y + player.velocity >= platforms[0].position.y) whenPlayerLose(true);
-
-	player.update();
 
 	scrollOffset += player.speed;
 };

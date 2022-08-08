@@ -42,6 +42,8 @@ body {
 	font: normal 24px Helvetica,Arial,sans-serif;
 	width: 100vw;
 	height: 100vh;
+	min-height: 100vh;
+	max-height: 100%;
 }
 
 a,
