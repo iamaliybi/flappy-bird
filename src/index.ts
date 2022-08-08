@@ -192,13 +192,7 @@ const movingObjects = () => {
 	pipes.forEach(pipe => pipe.position.x -= player.speed);
 };
 
-let LAST_TIME = (new Date()).getTime();
 const animate = () => {
-	// Calculate
-	const c = (new Date()).getTime();
-	console.log(Math.abs(c - LAST_TIME)); // 6_7
-
-	LAST_TIME = c;
 	// Code
 	animation = requestAnimationFrame(animate);
 	ctx.clearRect(0, 0, width, height);
